@@ -3,7 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
-	"url-shortener/cmd/internal/config"
+	"url-shortener/internal/config"
 )
 
 const (

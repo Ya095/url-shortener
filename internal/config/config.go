@@ -23,7 +23,7 @@ type HTTPServer struct {
 	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"40s"`
 }
 
-// MustLoad - это основная функция для чтения конфига. 
+// MustLoad - это основная функция для чтения конфига.
 // Возвращает указатель на структуру Config, а не ее копию.
 func MustLoad() *Config {
 	configPath := os.Getenv("CONFIG_PATH")
