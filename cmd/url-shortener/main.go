@@ -30,6 +30,8 @@ func main() {
 
 	_ = storage
 
+	//CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go   
+
 	// TODO init router
 
 	// TODO run server
