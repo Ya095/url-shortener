@@ -6,6 +6,10 @@ import (
 	"url-shortener/internal/config"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
+	mwLogger "url-shortener/internal/http-server/middleware/logger"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -32,7 +36,14 @@ func main() {
 
 	//CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go   
 
-	// TODO init router
+	router := chi.NewRouter()
+
+	// middleware
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
+	router.Use(mwLogger.New(log))
+	router.Use(middleware.Recoverer) // если в каком то запросе panic - то все приложение не упадет
+	router.Use(middleware.URLFormat)
 
 	// TODO run server
 }
