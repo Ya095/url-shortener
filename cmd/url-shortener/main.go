@@ -2,11 +2,13 @@ package main
 
 import (
 	"log/slog"
+	"net/http"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/handlers/url/save"
+	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
-	mwLogger "url-shortener/internal/http-server/middleware/logger"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -32,9 +34,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = storage
-
-	//CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go   
+	//CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go
 
 	router := chi.NewRouter()
 
@@ -44,6 +44,23 @@ func main() {
 	router.Use(mwLogger.New(log))
 	router.Use(middleware.Recoverer) // если в каком то запросе panic - то все приложение не упадет
 	router.Use(middleware.URLFormat)
+
+	// methods
+	router.Post("/url", save.New(log, storage))
+
+	// starting server
+	log.Info("starting server", slog.String("address", cfg.Address))
+	srv := &http.Server{
+		Addr: cfg.Address,
+		Handler: router,
+		ReadTimeout: cfg.Timeout,
+		WriteTimeout: cfg.Timeout,
+		IdleTimeout: cfg.IdleTimeout,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
+		log.Error("failed to start server")
+	}
 
 	// TODO run server
 }
