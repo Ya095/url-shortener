@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/handlers/url/redirect"
 	"url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/sl"
@@ -45,8 +46,10 @@ func main() {
 	router.Use(middleware.Recoverer) // если в каком то запросе panic - то все приложение не упадет
 	router.Use(middleware.URLFormat)
 
-	// methods
+	// endpoints
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
+	// TODO add Delete endpoint
 
 	// starting server
 	log.Info("starting server", slog.String("address", cfg.Address))
@@ -61,8 +64,6 @@ func main() {
 	if err := srv.ListenAndServe(); err != nil {
 		log.Error("failed to start server")
 	}
-
-	// TODO run server
 }
 
 func setupLogger(env string) *slog.Logger {
