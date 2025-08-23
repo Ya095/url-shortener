@@ -20,7 +20,7 @@ type urlGetter interface {
 
 func New(log *slog.Logger, urlGetter urlGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const fn = "handers.redirect.url.New"
+		const fn = "handers.url.redirect.New"
 
 		log = log.With(
 			slog.String("fn", fn),
