@@ -29,8 +29,12 @@ Supports creating, retrieving (redirect), and deleting short links.
 ## 📦 Installation & Run
 
 1. Clone the repository:
-
 ```bash
 git clone https://github.com/Ya095/url-shortener.git
 cd url-shortener
+```
+
+2. Run:
+```bash
+CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go
 ```

@@ -36,8 +36,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	//CONFIG_PATH=./config/local.yaml  go run ./cmd/url-shortener/main.go
-
 	router := chi.NewRouter()
 
 	// middleware
